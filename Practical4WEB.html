@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Marksheet</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background-color: #27A3F5;
+            text-align: center;
+        }
+
+        table{
+            margin: auto;
+            background-color:#91A879 ;
+        }
+
+        caption{
+            font-size: 26px;
+            font-weight: bold;
+            color: black;
+            padding: 10px;
+        }
+
+        th{
+            background-color: #DB9393;
+            color: black;
+        }
+
+        tfoot td{
+            background-color: #DB9393;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>SB Jain College of Engineering</h1>
+<h3>Computer Engineering Department</h3>
+
+<table border="4" cellpadding="10" cellspacing="0">
+
+    <caption>Student Marksheet</caption>
+
+    <!-- HEADER -->
+    <thead>
+        <tr>
+            <th rowspan="2">Roll No</th>
+            <th rowspan="2">Student Name</th>
+            <th rowspan="2">Branch</th>
+            <th colspan="3">Marks</th>
+            <th rowspan="2">Total</th>
+            <th rowspan="2">Grade</th>
+        </tr>
+
+        <tr>
+            <th>Maths</th>
+            <th>Physics</th>
+            <th>Programming</th>
+        </tr>
+    </thead>
+
+    <!-- BODY -->
+    <tbody>
+
+        <tr>
+            <td>201</td>
+            <td>Atharva Tayde</td>
+            <td>CSE</td>
+            <td>85</td>
+            <td>78</td>
+            <td>90</td>
+            <td>253</td>
+            <td>A</td>
+        </tr>
+
+        <tr>
+            <td>202</td>
+            <td>Riya Sharma</td>
+            <td>CSE</td>
+            <td>92</td>
+            <td>88</td>
+            <td>95</td>
+            <td>275</td>
+            <td>A+</td>
+        </tr>
+
+        <tr>
+            <td>203</td>
+            <td>Siya Sharma</td>
+            <td>CSE</td>
+            <td>60</td>
+            <td>58</td>
+            <td>65</td>
+            <td>183</td>
+            <td>B+</td>
+        </tr>
+
+        <tr>
+            <td>204</td>
+            <td>Gayatri Arora</td>
+            <td>CSE</td>
+            <td>68</td>
+            <td>82</td>
+            <td>91</td>
+            <td>241</td>
+            <td>A</td>
+        </tr>
+
+        <tr>
+            <td>205</td>
+            <td>Alisa Chawre</td>
+            <td>CSE</td>
+            <td>70</td>
+            <td>92</td>
+            <td>65</td>
+            <td>227</td>
+            <td>A</td>
+        </tr>
+
+    </tbody>
+
+    <!-- FOOTER -->
+    <tfoot>
+        <tr>
+            <td colspan="8">Total Students: 5 | Passing Marks: 45 per subject</td>
+        </tr>
+    </tfoot>
+
+</table>
+
+</body>
+</html>
