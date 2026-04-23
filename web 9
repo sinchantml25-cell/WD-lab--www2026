@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CSS3 Demo – Learn by Seeing</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&family=Nunito:wght@400;600&display=swap" rel="stylesheet"/>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    /* ============================================================
+       CSS VARIABLES – change these to restyle the whole page!
+    ============================================================ */
+    :root {
+      --bg:        #0f0c29;
+      --card-bg:   #1a1740;
+      --accent1:   #f7c948;
+      --accent2:   #ff6b6b;
+      --accent3:   #4ecdc4;
+      --text:      #e8e4ff;
+      --muted:     #9992cc;
+      --radius:    14px;
+      --shadow:    0 8px 32px rgba(0,0,0,.45);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ============================================================
+       1. ANIMATION – hero section fades + slides in
+    ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(247,201,72,.5); }
+      50%       { box-shadow: 0 0 0 14px rgba(247,201,72,0); }
+    }
+
+    @keyframes colorShift {
+      0%   { color: var(--accent1); }
+      33%  { color: var(--accent2); }
+      66%  { color: var(--accent3); }
+      100% { color: var(--accent1); }
+    }
+
+    /* ============================================================
+       HEADER / HERO
+    ============================================================ */
+    header {
+      text-align: center;
+      padding: 70px 20px 50px;
+      background: linear-gradient(135deg, #1a1740 0%, #302b63 50%, #0f0c29 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {               /* decorative circle */
+      content: '';
+      position: absolute;
+      width: 420px; height: 420px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(78,205,196,.18), transparent 70%);
+      top: -120px; right: -100px;
+      pointer-events: none;
+    }
+
+    header h1 {
+      font-family: 'Baloo 2', cursive;
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      font-weight: 800;
+      animation: fadeUp .9s ease both, colorShift 5s ease-in-out infinite;
+    }
+
+    header p {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      color: var(--muted);
+      animation: fadeUp .9s .2s ease both;
+    }
+
+    .hero-icon {
+      font-size: 3.5rem;
+      display: inline-block;
+      margin-bottom: 16px;
+      animation: spin 6s linear infinite;
+      color: var(--accent1);
+    }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      padding: 7px 18px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: background .3s, color .3s;      /* CSS3 TRANSITION */
+    }
+
+    nav a:hover {
+      background: var(--accent1);
+      color: #111;
+    }
+
+    /* ============================================================
+       MAIN WRAPPER
+    ============================================================ */
+    main { max-width: 1100px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    /* section titles */
+    .section-title {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title i { color: var(--accent1); }
+
+    /* ============================================================
+       2. MULTIPLE COLUMNS – article text
+    ============================================================ */
+    .multi-col-section { margin-bottom: 50px; }
+
+    .multi-col {
+      column-count: 3;                  /* CSS3 MULTI-COLUMN */
+      column-gap: 28px;
+      column-rule: 1px solid rgba(255,255,255,.1);
+      font-size: .97rem;
+      color: var(--muted);
+      background: var(--card-bg);
+      padding: 28px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .multi-col p { margin-bottom: 10px; }
+
+    /* stack columns on small screens */
+    @media (max-width: 700px) { .multi-col { column-count: 1; } }
+    @media (max-width: 960px) and (min-width: 701px) { .multi-col { column-count: 2; } }
+
+    /* ============================================================
+       3. CARDS WITH TRANSFORM + ICON
+    ============================================================ */
+    .cards-section { margin-bottom: 50px; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 30px 22px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform .35s ease, box-shadow .35s ease;  /* CSS3 TRANSITION */
+      cursor: default;
+      border-top: 3px solid var(--accent1);
+      animation: fadeUp .7s ease both;
+    }
+
+    .card:nth-child(1) { animation-delay: .1s; border-color: var(--accent1); }
+    .card:nth-child(2) { animation-delay: .2s; border-color: var(--accent2); }
+    .card:nth-child(3) { animation-delay: .3s; border-color: var(--accent3); }
+    .card:nth-child(4) { animation-delay: .4s; border-color: #a29bfe; }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);   /* CSS3 TRANSFORM */
+      box-shadow: 0 20px 50px rgba(0,0,0,.5);
+    }
+
+    .card .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 14px;
+      display: inline-block;
+      transition: transform .4s ease;
+    }
+
+    .card:hover .card-icon { transform: rotateY(360deg); }  /* 3D TRANSFORM */
+
+    .card h3 {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .card p { font-size: .88rem; color: var(--muted); }
+
+    .card:nth-child(1) .card-icon { color: var(--accent1); }
+    .card:nth-child(2) .card-icon { color: var(--accent2); }
+    .card:nth-child(3) .card-icon { color: var(--accent3); }
+    .card:nth-child(4) .card-icon { color: #a29bfe; }
+
+    /* ============================================================
+       4. PROGRESS BARS – CSS animation
+    ============================================================ */
+    .skills-section { margin-bottom: 50px; }
+
+    .skill-row { margin-bottom: 18px; }
+
+    .skill-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .bar-track {
+      background: rgba(255,255,255,.08);
+      border-radius: 50px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    @keyframes growBar { from { width: 0; } }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 50px;
+      animation: growBar 1.4s ease both;           /* CSS3 ANIMATION */
+    }
+
+    .bar-fill.html  { width: 90%; background: linear-gradient(90deg, #f7c948, #ff6b6b); }
+    .bar-fill.css   { width: 80%; background: linear-gradient(90deg, #4ecdc4, #a29bfe); animation-delay:.2s }
+    .bar-fill.js    { width: 65%; background: linear-gradient(90deg, #ff6b6b, #f7c948); animation-delay:.4s }
+    .bar-fill.react { width: 50%; background: linear-gradient(90deg, #a29bfe, #4ecdc4); animation-delay:.6s }
+
+    /* ============================================================
+       5. FEATURE ROW – CSS3 gradient backgrounds
+    ============================================================ */
+    .feature-row {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 50px;
+    }
+
+    .feature-box {
+      flex: 1 1 200px;
+      padding: 28px 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      animation: pulse 2.4s infinite;              /* pulsing shadow animation */
+    }
+
+    .feature-box i { font-size: 1.8rem; display: block; margin-bottom: 10px; }
+
+    .fb1 { background: linear-gradient(135deg, #f7c948, #ff6b6b); }
+    .fb2 { background: linear-gradient(135deg, #4ecdc4, #302b63); }
+    .fb3 { background: linear-gradient(135deg, #a29bfe, #ff6b6b); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: .85rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,.07);
+    }
+
+    footer span { color: var(--accent2); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <header>
+    <i class="fa-solid fa-code hero-icon"></i>
+    <h1>CSS3 Features Demo</h1>
+    <p>Columns · Fonts · Icons · Animations · Transformations — all in one page</p>
+  </header>
+
+  <!-- ===== NAV ===== -->
+  <nav>
+    <a href="#columns"><i class="fa-solid fa-columns"></i> Columns</a>
+    <a href="#cards"><i class="fa-solid fa-layer-group"></i> Cards</a>
+    <a href="#skills"><i class="fa-solid fa-chart-bar"></i> Skills</a>
+    <a href="#features"><i class="fa-solid fa-star"></i> Features</a>
+  </nav>
+
+  <main>
+
+    <!-- ===== SECTION 1 – MULTIPLE COLUMNS ===== -->
+    <section class="multi-col-section" id="columns">
+      <h2 class="section-title"><i class="fa-solid fa-columns"></i> CSS3 Multiple Columns</h2>
+      <div class="multi-col">
+        <p>CSS3 <strong>column-count</strong> splits text into newspaper-style columns automatically. You just set the number and the browser does the rest.</p>
+        <p>Use <strong>column-gap</strong> to control the space between columns, and <strong>column-rule</strong> to draw a dividing line — just like borders but between columns.</p>
+        <p>The text flows naturally from one column to the next. Long articles become much easier to read, especially on wide screens.</p>
+        <p>On small screens, media queries reduce the column count so the layout stays readable. This makes the design <em>responsive</em>.</p>
+        <p>Combine columns with good font choices and line-height for a polished, magazine-like reading experience — no JavaScript required!</p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2 – CARDS + ICONS + TRANSFORMS ===== -->
+    <section class="cards-section" id="cards">
+      <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Cards, Icons &amp; Transforms</h2>
+      <div class="cards-grid">
+
+        <div class="card">
+          <i class="fa-brands fa-html5 card-icon"></i>
+          <h3>HTML5</h3>
+          <p>The skeleton of every webpage. Structure your content with semantic tags.</p>
+        </div>
+
+        <div class="card">
+          <i class="fa-brands fa-css3-alt card-icon"></i>
+          <h3>CSS3</h3>
+          <p>Style and animate your page. Colors, fonts, layouts, and smooth transitions.</p>
+        </div>
+
+        <div class="card">
+          <i class="fa-brands fa-js card-icon"></i>
+          <h3>JavaScript</h3>
+          <p>Add interactivity. Click events, dynamic data, and logic make pages come alive.</p>
+        </div>
+
+        <div class="card">
+          <i class="fa-brands fa-react card-icon"></i>
+          <h3>React</h3>
+          <p>Build powerful UIs with components. The most popular front-end library.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3 – PROGRESS BARS / ANIMATIONS ===== -->
+    <section class="skills-section" id="skills">
+      <h2 class="section-title"><i class="fa-solid fa-chart-bar"></i> Animated Skill Bars</h2>
+
+      <div class="skill-row">
+        <div class="skill-label"><span><i class="fa-brands fa-html5"></i> HTML</span><span>90%</span></div>
+        <div class="bar-track"><div class="bar-fill html"></div></div>
+      </div>
+
+      <div class="skill-row">
+        <div class="skill-label"><span><i class="fa-brands fa-css3-alt"></i> CSS3</span><span>80%</span></div>
+        <div class="bar-track"><div class="bar-fill css"></div></div>
+      </div>
+
+      <div class="skill-row">
+        <div class="skill-label"><span><i class="fa-brands fa-js"></i> JavaScript</span><span>65%</span></div>
+        <div class="bar-track"><div class="bar-fill js"></div></div>
+      </div>
+
+      <div class="skill-row">
+        <div class="skill-label"><span><i class="fa-brands fa-react"></i> React</span><span>50%</span></div>
+        <div class="bar-track"><div class="bar-fill react"></div></div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4 – FEATURE BOXES ===== -->
+    <section id="features">
+      <h2 class="section-title"><i class="fa-solid fa-star"></i> CSS3 Feature Highlights</h2>
+      <div class="feature-row">
+
+        <div class="feature-box fb1">
+          <i class="fa-solid fa-font"></i>
+          Custom Fonts<br><small style="font-weight:400">Google Fonts via @import</small>
+        </div>
+
+        <div class="feature-box fb2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          Animations<br><small style="font-weight:400">@keyframes + animation</small>
+        </div>
+
+        <div class="feature-box fb3">
+          <i class="fa-solid fa-up-right-and-down-left-from-center"></i>
+          Transforms<br><small style="font-weight:400">scale, rotate, translateY</small>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Built with <span>♥</span> using only <strong>HTML5 + CSS3</strong> — no frameworks needed!
+  </footer>
+
+</body>
+</html>
