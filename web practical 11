@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 APIs Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .section {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      
+
+padding: 20px;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      color: #444;
+      margin-top: 0;
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 8px;
+    }
+
+    /* ---- Drag & Drop ---- */
+    .drag-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .drag-box {
+      width: 130px;
+      height: 130px;
+      border: 2px dashed #aaa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      background: #f9f9f9;
+    }
+
+    .drag-item {
+      padding: 10px 18px;
+      background: #4a90e2;
+      color: white;
+      border-radius: 6px;
+      cursor: grab;
+      margin: 5px;
+      display: inline-block;
+    }
+
+    .drag-box.over {
+      background: #e0f0ff;
+      border-color: #4a90e2;
+    }
+
+   
+
+
+
+ /* ---- Geolocation ---- */
+    button {
+      padding: 9px 18px;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 8px;
+    }
+
+    button:hover { background: #357abd; }
+
+    #geo-result {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f0f4f8;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #333;
+      min-height: 36px;
+    }
+
+    /* ---- Web Storage ---- */
+    input[type="text"] {
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 200px;
+      margin-right: 8px;
+    }
+
+    #storage-list {
+      margin-top: 14px;
+      list-style: none;
+      padding: 0;
+    }
+
+    #storage-list li {
+      background: #f0f4f8;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+   
+ #storage-list li span {
+      color: red;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    p.note {
+      font-size: 12px;
+      color: #888;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HTML5 APIs Demo</h1>
+
+  <!-- 1. DRAG AND DROP -->
+  <div class="section">
+    <h2>1. Drag and Drop API</h2>
+    <p>Drag the colored items into the drop box below:</p>
+
+    <div>
+      <div class="drag-item" draggable="true" id="item1">🍎 Apple</div>
+      <div class="drag-item" draggable="true" id="item2">🍌 Banana</div>
+      <div class="drag-item" draggable="true" id="item3">🍇 Grapes</div>
+    </div>
+
+    <br>
+    <div class="drag-container">
+      <div class="drag-box" id="dropzone">Drop here</div>
+    </div>
+  </div>
+
+  <!-- 2. GEOLOCATION -->
+  <div class="section">
+    <h2>2. Geolocation API</h2>
+    <p>Click the button to get your current location:</p>
+    <button onclick="getLocation()">📍 Get My Location</button>
+    <button onclick="clearGeo()">Clear</button>
+    <div id="geo-result">Your location will appear here.</div>
+  </div>
+
+  <!-- 3. WEB STORAGE -->
+  <div class="section">
+    <h2>3. Web Storage API (localStorage)</h2>
+    <p>Type a note and save it. It stays even after page refresh!</p>
+  
+
+
+
+  <input type="text" id="note-input" placeholder="Type something...">
+    <button onclick="saveNote()">Save Note</button>
+    <button onclick="clearAll()">Clear All</button>
+    <ul id="storage-list"></ul>
+    <p class="note">* Data is saved in your browser's localStorage.</p>
+  </div>
+
+  <script>
+    // =====================
+    // 1. DRAG AND DROP
+    // =====================
+    const items = document.querySelectorAll('.drag-item');
+    const dropzone = document.getElementById('dropzone');
+
+    items.forEach(item => {
+      item.addEventListener('dragstart', function(e) {
+        e.dataTransfer.setData('text', e.target.id);
+      });
+    });
+
+    dropzone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      dropzone.classList.add('over');
+    });
+
+    dropzone.addEventListener('dragleave', function() {
+      dropzone.classList.remove('over');
+    });
+
+    dropzone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      dropzone.classList.remove('over');
+      const id = e.dataTransfer.getData('text');
+      const draggedItem = document.getElementById(id);
+      dropzone.appendChild(draggedItem);
+      dropzone.style.color = '#333';
+    });
+
+    // =====================
+    // 2. GEOLOCATION
+    // =====================
+    function getLocation() {
+      const result = document.getElementById('geo-result');
+      result.textContent = 'Fetching location...';
+
+      if (!navigator.geolocation) {
+        result.textContent = 'Geolocation is not supported by your browser.';
+        return;
+      }
+
+      
+navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude.toFixed(5);
+          const lon = position.coords.longitude.toFixed(5);
+          result.innerHTML =
+            '✅ <strong>Latitude:</strong> ' + lat +
+            ' &nbsp; <strong>Longitude:</strong> ' + lon;
+        },
+        function(error) {
+          result.textContent = '❌ Error: ' + error.message;
+        }
+      );
+    }
+
+    function clearGeo() {
+      document.getElementById('geo-result').textContent = 'Your location will appear here.';
+    }
+
+    // =====================
+    // 3. WEB STORAGE
+    // =====================
+    function loadNotes() {
+      const list = document.getElementById('storage-list');
+      list.innerHTML = '';
+      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+      notes.forEach(function(note, index) {
+        const li = document.createElement('li');
+        li.textContent = note;
+        const del = document.createElement('span');
+        del.textContent = ' ✕';
+        del.onclick = function() { deleteNote(index); };
+        li.appendChild(del);
+        list.appendChild(li);
+      });
+    }
+
+    function saveNote() {
+      const input = document.getElementById('note-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+      notes.push(text);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      input.value = '';
+      loadNotes();
+    }
+
+   
+
+
+ function deleteNote(index) {
+      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+      notes.splice(index, 1);
+      localStorage.setItem('notes', JSON.stringify(notes));
+      loadNotes();
+    }
+
+    function clearAll() {
+      localStorage.removeItem('notes');
+      loadNotes();
+    }
+
+    // Load saved notes on page start
+    loadNotes();
+  </script>
+
+</body>
+</html>
