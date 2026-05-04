@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lumina Studio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root { --ink: #0d0d0d; --cream: #f5f0e8; --gold: #c9a84c; --muted: #6b6560; }
+    * { margin: 0; box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+    h1,h2,h3,.brand { font-family: 'Playfair Display', serif; }
+
+    /* NAVBAR */
+    .navbar { background: var(--ink) !important; padding: 1.1rem 2rem; }
+    .navbar-brand { color: var(--gold) !important; font-size: 1.6rem; letter-spacing: 1px; }
+    .nav-link { color: #ccc !important; font-size: .9rem; letter-spacing: .5px; transition: color .2s; }
+    .nav-link:hover { color: var(--gold) !important; }
+    .nav-cta { background: var(--gold); color: var(--ink) !important; border-radius: 2px; padding: 6px 18px !important; font-weight: 600; }
+
+    /* CAROUSEL */
+    .carousel { max-height: 520px; overflow: hidden; }
+    .carousel-item { height: 520px; }
+    .slide-bg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; position: relative; }
+    .slide-bg::before { content:''; position:absolute; inset:0; background: rgba(0,0,0,.52); }
+    .slide-text { position: relative; z-index: 1; }
+    .s1 { background-image: url('https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1400&q=80'); }
+    .s2 { background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&q=80'); }
+    .s3 { background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80'); }
+    .slide-text { text-align: center; color: #fff; padding: 2rem; }
+    .slide-text h2 { font-size: clamp(2rem, 5vw, 3.5rem); color: var(--gold); margin-bottom: .5rem; }
+    .slide-text p { font-size: 1.15rem; opacity: .8; max-width: 500px; margin: 0 auto 1.5rem; }
+    .carousel-indicators [data-bs-target] { background-color: var(--gold); }
+
+ 
+
+
+
+
+
+   /* CARDS SECTION */
+    .section { padding: 5rem 0; }
+    .section-title { font-size: 2.4rem; margin-bottom: .4rem; }
+    .gold-line { width: 60px; height: 3px; background: var(--gold); margin: 0 auto 3rem; }
+    .card { border: none; border-radius: 0; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.07); transition: transform .3s, box-shadow .3s; overflow: hidden; }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(0,0,0,.13); }
+    .card-img-top { height: 210px; object-fit: cover; width: 100%; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; }
+    .card-text { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+    .btn-gold { background: var(--gold); color: var(--ink); border: none; border-radius: 2px; font-weight: 600; padding: 8px 22px; letter-spacing: .4px; transition: opacity .2s; }
+    .btn-gold:hover { opacity: .85; color: var(--ink); }
+    .btn-outline-ink { border: 2px solid var(--ink); color: var(--ink); border-radius: 2px; font-weight: 600; padding: 7px 20px; background: transparent; transition: all .2s; }
+    .btn-outline-ink:hover { background: var(--ink); color: #fff; }
+
+    /* STATS STRIP */
+    .stats { background: var(--ink); color: #fff; padding: 3.5rem 0; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--gold); }
+    .stat-label { font-size: .85rem; opacity: .6; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* CTA BANNER */
+    .cta-banner { background: linear-gradient(135deg, #c9a84c 0%, #e8c96e 100%); padding: 4.5rem 0; text-align: center; }
+    .cta-banner h2 { font-size: 2.5rem; color: var(--ink); }
+    .cta-banner p { color: rgba(0,0,0,.65); max-width: 480px; margin: .8rem auto 2rem; }
+
+    /* FOOTER */
+    footer { background: #0d0d0d; color: #888; padding: 3rem 0 1.5rem; }
+    footer h6 { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 1rem; }
+    footer a { color: #888; text-decoration: none; font-size: .88rem; display: block; margin-bottom: .4rem; transition: color .2s; }
+    footer a:hover { color: var(--gold); }
+    .footer-bottom { border-top: 1px solid #222; margin-top: 2rem; padding-top: 1.2rem; font-size: .8rem; text-align: center; }
+    .brand-footer { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.4rem; }
+  </style>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#">Lumina</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon" style="filter:invert(1)"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item"><a class="nav-link" href="#">Work</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+        <li class="nav-item"><a class="nav-link nav-cta" href="#">Hire Us</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- CAROUSEL -->
+<div id="hero" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#hero" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#hero" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#hero" data-bs-slide-to="2"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active"><div class="slide-bg s1"><div class="slide-text"><h2>Craft Meets Code</h2><p>We build digital experiences that resonate, convert, and endure.</p><a href="#" class="btn btn-gold">View Portfolio</a></div></div></div>
+    <div class="carousel-item"><div class="slide-bg s2"><div class="slide-text"><h2>Brand Identity</h2><p>Your story, told with precision and elegance across every medium.</p><a href="#" class="btn btn-gold">Our Work</a></div></div></div>
+    <div class="carousel-item"><div class="slide-bg s3"><div class="slide-text"><h2>Strategy First</h2><p>Design decisions grounded in insight, shaped by creative ambition.</p><a href="#" class="btn btn-gold">Get Started</a></div></div></div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#hero" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+  <button class="carousel-control-next" type="button" data-bs-target="#hero" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- CARDS -->
+<section class="section text-center">
+  <div class="container">
+    <h2 class="section-title">Our Services</h2>
+    <div class="gold-line"></div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100">
+          <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&q=80" class="card-img-top" alt="Visual Design"/>
+          <div class="card-body p-4">
+            <h5 class="card-title mb-2">Visual Design</h5>
+            <p class="card-text mb-4">From brand systems to editorial layouts — we create visuals that leave lasting impressions.</p>
+            <a href="#" class="btn btn-gold">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?w=600&q=80" class="card-img-top" alt="Web Development"/>
+          <div class="card-body p-4">
+            <h5 class="card-title mb-2">Web Development</h5>
+            <p class="card-text mb-4">High-performance, responsive websites engineered for conversion and delight.</p>
+            <a href="#" class="btn btn-gold">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" class="card-img-top" alt="Growth Strategy"/>
+          <div class="card-body p-4">
+            <h5 class="card-title mb-2">Growth Strategy</h5>
+            <p class="card-text mb-4">Data-driven campaigns aligned with your brand vision and business objectives.</p>
+            <a href="#" class="btn btn-gold">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<!-- STATS -->
+<div class="stats text-center">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-6 col-md-3"><div class="stat-num">240+</div><div class="stat-label">Projects Delivered</div></div>
+      <div class="col-6 col-md-3"><div class="stat-num">98%</div><div class="stat-label">Client Satisfaction</div></div>
+      <div class="col-6 col-md-3"><div class="stat-num">12</div><div class="stat-label">Industry Awards</div></div>
+      <div class="col-6 col-md-3"><div class="stat-num">8yr</div><div class="stat-label">In Business</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container">
+    <h2>Ready to Build Something Great?</h2>
+    <p>Let's collaborate on your next project and turn your vision into reality.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="#" class="btn btn-outline-ink px-4 py-2">See Our Work</a>
+      <a href="#" class="btn" style="background:var(--ink);color:#fff;border-radius:2px;padding:9px 28px;font-weight:600;">Start a Project</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="brand-footer mb-2">Lumina</div>
+        <p style="font-size:.88rem;line-height:1.7">A creative studio crafting digital experiences that matter. Based globally, thinking locally.</p>
+      </div>
+      <div class="col-md-2"><h6>Company</h6><a href="#">About</a><a href="#">Work</a><a href="#">Careers</a></div>
+      <div class="col-md-2"><h6>Services</h6><a href="#">Design</a><a href="#">Development</a><a href="#">Strategy</a></div>
+      <div class="col-md-4"><h6>Stay in Touch</h6><p style="font-size:.88rem;margin-bottom:.8rem">Subscribe for insights and studio updates.</p>
+        <div class="input-group input-group-sm">
+          <input type="email" class="form-control" placeholder="your@email.com" style="border-radius:0;background:#1a1a1a;border-color:#333;color:#fff"/>
+          <button class="btn btn-gold btn-sm" style="border-radius:0">Join</button>
+        </div>
+    
+
+  </div>
+    </div>
+    <div class="footer-bottom">© 2026 Lumina Studio. All rights reserved.</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
