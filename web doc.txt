@@ -1,0 +1,1046 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlumniConnect — Official Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <style>
+    :root {
+      --navy:       #0a1628;
+      --navy-mid:   #112240;
+      --navy-light: #1e3a5f;
+      --gold:       #d4a017;
+      --gold-light: #f0c040;
+      --gold-pale:  #fdf3d0;
+      --cream:      #faf8f4;
+      --white:      #ffffff;
+      --gray-100:   #f1f4f9;
+      --gray-200:   #dde3ee;
+      --text:       #0f1c2e;
+      --muted:      #6b7c93;
+      --accent:     #3b82f6;
+      --green:      #22c55e;
+      --red:        #ef4444;
+      --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 32px;
+      --sh-sm: 0 2px 12px rgba(10,22,40,.07);
+      --sh-md: 0 8px 32px rgba(10,22,40,.12);
+      --sh-lg: 0 20px 60px rgba(10,22,40,.2);
+      --sh-gold: 0 8px 32px rgba(212,160,23,.35);
+      --t: .28s cubic-bezier(.4,0,.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+    h1,h2,h3,.serif { font-family: 'Cormorant Garamond', serif; }
+    img { display: block; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ── PRELOADER ── */
+    #preloader { position: fixed; inset: 0; background: var(--navy); z-index: 99999; display: flex; align-items: center; justify-content: center; transition: opacity .6s ease, visibility .6s ease; }
+    #preloader.hidden { opacity: 0; visibility: hidden; }
+    .loader-ring { width: 60px; height: 60px; border: 3px solid rgba(212,160,23,.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── NAVBAR ── */
+    .navbar { position: sticky; top: 0; z-index: 900; background: rgba(10,22,40,.95); backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(212,160,23,.15); padding: 0 5%; transition: box-shadow var(--t); }
+    .navbar.scrolled { box-shadow: var(--sh-lg); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 66px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); box-shadow: var(--sh-gold); }
+    .brand-text { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: #fff; letter-spacing: -.3px; }
+    .brand-text em { color: var(--gold); font-style: normal; }
+    .nav-links { display: flex; gap: 2px; list-style: none; align-items: center; }
+    .nav-links a { color: rgba(255,255,255,.72); text-decoration: none; font-weight: 600; font-size: .88rem; letter-spacing: .2px; padding: 6px 14px; border-radius: 8px; transition: background var(--t), color var(--t); }
+    .nav-links a:hover { color: var(--gold); background: rgba(212,160,23,.1); }
+    .nav-cta { background: var(--gold) !important; color: var(--navy) !important; padding: 8px 20px !important; border-radius: 50px !important; margin-left: 8px; }
+    .nav-cta:hover { background: var(--gold-light) !important; transform: translateY(-1px); box-shadow: var(--sh-gold); }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: var(--t); }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+    @media(max-width:800px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 66px; left: 0; right: 0; background: rgba(10,22,40,.98); padding: 16px 5%; gap: 4px; border-bottom: 2px solid var(--gold); }
+      .nav-links.open { display: flex; }
+    }
+
+    /* ── HERO ── */
+    .hero { min-height: 92vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 20px 80px; overflow: hidden; background: var(--navy); }
+    .hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1562774053-701939374585?w=1800&auto=format&fit=crop&q=85') center/cover no-repeat; opacity: .38; }
+    .hero-overlay { position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, rgba(212,160,23,.18) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(59,130,246,.12) 0%, transparent 55%), linear-gradient(180deg, rgba(10,22,40,.45) 0%, rgba(10,22,40,.72) 100%); }
+    .hero-particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .hero-particles span { position: absolute; border-radius: 50%; background: var(--gold); animation: float var(--dur, 8s) var(--delay, 0s) ease-in-out infinite alternate; opacity: var(--op, .15); }
+    @keyframes float { from { transform: translate(0,0); } to { transform: translate(var(--tx,20px), var(--ty,-30px)); } }
+    .hero-inner { position: relative; z-index: 2; max-width: 760px; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(212,160,23,.15); color: var(--gold-light); border: 1px solid rgba(212,160,23,.3); padding: 7px 20px; border-radius: 50px; font-size: .78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1.4rem; animation: fadeUp .7s ease both; }
+    .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.8rem,7vw,5rem); color: #fff; line-height: 1.1; letter-spacing: -.5px; animation: fadeUp .7s .1s ease both; }
+    .hero h1 em { color: var(--gold); font-style: italic; }
+    .hero p { color: rgba(255,255,255,.72); font-size: 1.1rem; margin: 1.4rem auto 2.4rem; max-width: 560px; line-height: 1.75; animation: fadeUp .7s .2s ease both; }
+    .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; animation: fadeUp .7s .3s ease both; }
+    .btn-hero-primary { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border: none; padding: 15px 38px; border-radius: 50px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform var(--t), box-shadow var(--t); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--sh-gold); }
+    .btn-hero-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(212,160,23,.5); }
+    .btn-hero-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.4); padding: 14px 34px; border-radius: 50px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--t); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-hero-outline:hover { border-color: var(--gold); background: rgba(212,160,23,.1); color: var(--gold-light); }
+    .hero-scroll { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; color: rgba(255,255,255,.4); font-size: .72rem; letter-spacing: 1px; text-transform: uppercase; animation: fadeUp .7s .5s ease both; cursor: pointer; }
+    .scroll-dot { width: 28px; height: 44px; border: 2px solid rgba(255,255,255,.25); border-radius: 14px; display: flex; justify-content: center; padding-top: 8px; }
+    .scroll-dot::after { content: ''; width: 4px; height: 8px; background: var(--gold); border-radius: 2px; animation: scrollBounce 1.8s infinite; }
+    @keyframes scrollBounce { 0%,100%{transform:translateY(0);opacity:1} 50%{transform:translateY(10px);opacity:.3} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ── STATS BAR ── */
+    .stats-bar { background: var(--white); box-shadow: var(--sh-md); position: relative; z-index: 10; }
+    .stats-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; }
+    .stat-item { flex: 1; min-width: 150px; padding: 26px 20px; text-align: center; border-right: 1px solid var(--gray-200); position: relative; }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.3rem; font-weight: 700; color: var(--navy); display: block; line-height: 1; }
+    .stat-label { color: var(--muted); font-size: .75rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; margin-top: 4px; display: block; }
+    .stat-item::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%) scaleX(0); width: 40%; height: 3px; background: var(--gold); border-radius: 2px; transition: transform .4s ease; }
+    .stat-item:hover::after { transform: translateX(-50%) scaleX(1); }
+
+    /* ── SECTION LAYOUT ── */
+    section { padding: 90px 5%; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .label-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--gold-pale); color: #8a6500; border: 1px solid rgba(212,160,23,.3); padding: 5px 16px; border-radius: 50px; font-size: .72rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: .9rem; }
+    .label-chip i { font-size: .85rem; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3rem); color: var(--navy); line-height: 1.15; }
+    .title-line { width: 52px; height: 4px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 4px; margin: 14px auto 0; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: center; }
+    @media(max-width:800px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-img-wrap { position: relative; }
+    .about-img-main { width: 100%; height: 420px; object-fit: cover; border-radius: var(--r-lg); box-shadow: var(--sh-lg); }
+    .about-img-badge { position: absolute; bottom: -20px; right: -20px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); padding: 16px 20px; border-radius: var(--r-md); font-weight: 800; font-size: .9rem; box-shadow: var(--sh-gold); text-align: center; }
+    .about-img-badge span { display: block; font-size: 1.5rem; font-family: 'Cormorant Garamond', serif; }
+    .about-text .label-chip { margin-bottom: 1rem; }
+    .about-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,3.5vw,2.8rem); color: var(--navy); line-height: 1.2; }
+    .about-bar { width: 52px; height: 4px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 4px; margin: 14px 0 1.6rem; }
+    .about-text p { color: var(--muted); line-height: 1.85; margin-bottom: 1rem; font-size: .97rem; }
+    .about-features { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 2rem; }
+    .af-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--gray-100); border-radius: var(--r-sm); font-weight: 700; font-size: .88rem; color: var(--text); transition: background var(--t), box-shadow var(--t); cursor: default; }
+    .af-item:hover { background: var(--gold-pale); box-shadow: var(--sh-sm); }
+    .af-item i { color: var(--gold); font-size: 1.1rem; flex-shrink: 0; }
+
+    /* ── QR SECTION ── */
+    #qr-portal { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%); position: relative; overflow: hidden; }
+    #qr-portal::before { content:''; position:absolute; width:600px; height:600px; background:radial-gradient(circle, rgba(212,160,23,.12) 0%, transparent 70%); top:-200px; right:-100px; border-radius:50%; }
+    .qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; position: relative; z-index: 1; }
+    @media(max-width:800px) { .qr-grid { grid-template-columns: 1fr; text-align: center; } }
+    .qr-text .label-chip { background: rgba(212,160,23,.15); color: var(--gold-light); border-color: rgba(212,160,23,.3); }
+    .qr-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem,4vw,3rem); color: #fff; line-height: 1.2; margin-bottom: 1.2rem; }
+    .qr-title em { color: var(--gold); font-style: italic; }
+    .qr-text p { color: rgba(255,255,255,.7); line-height: 1.8; font-size: .97rem; margin-bottom: 1.5rem; }
+    .qr-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .qr-features li { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,.8); font-size: .92rem; font-weight: 600; }
+    .qr-features li i { color: var(--gold); font-size: 1rem; }
+    .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+    .qr-card { background: var(--white); border-radius: var(--r-xl); padding: 32px; box-shadow: 0 24px 64px rgba(0,0,0,.35); text-align: center; position: relative; }
+    .qr-card::before { content:''; position:absolute; inset:-2px; border-radius: calc(var(--r-xl) + 2px); background: linear-gradient(135deg, var(--gold), var(--gold-light), transparent 60%); z-index:-1; }
+    .qr-canvas-wrap { background: var(--cream); padding: 16px; border-radius: var(--r-md); margin-bottom: 16px; display: inline-block; }
+    .qr-canvas-wrap canvas { display: block; border-radius: 8px; }
+    .qr-label { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .qr-url { font-size: .72rem; color: var(--muted); font-family: monospace; background: var(--gray-100); padding: 6px 12px; border-radius: 6px; }
+    .qr-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .qr-tab-btn { padding: 8px 18px; border-radius: 50px; border: 2px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: rgba(255,255,255,.75); font-size: .82rem; font-weight: 700; cursor: pointer; transition: var(--t); }
+    .qr-tab-btn.active, .qr-tab-btn:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+    .qr-download { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border: 1.5px solid rgba(255,255,255,.2); padding: 9px 22px; border-radius: 50px; font-size: .85rem; font-weight: 700; cursor: pointer; transition: var(--t); text-decoration: none; }
+    .qr-download:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+    /* ── REGISTER ── */
+    #register { background: var(--gray-100); }
+    .reg-wrapper { max-width: 800px; margin: 0 auto; background: var(--white); border-radius: var(--r-xl); box-shadow: var(--sh-lg); overflow: hidden; }
+    .reg-header { background: linear-gradient(135deg, var(--navy), var(--navy-light)); padding: 28px 40px; }
+    .step-track { display: flex; align-items: center; gap: 0; }
+    .step-dot { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.15); color: rgba(255,255,255,.5); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .82rem; transition: var(--t); flex-shrink: 0; cursor: pointer; border: 2px solid transparent; }
+    .step-dot.active { background: var(--gold); color: var(--navy); border-color: var(--gold-light); box-shadow: var(--sh-gold); }
+    .step-dot.done { background: #22c55e; color: #fff; border-color: #16a34a; }
+    .step-line { flex: 1; height: 2px; background: rgba(255,255,255,.15); margin: 0 4px; }
+    .step-label { display: flex; gap: 0; flex: 1; margin-top: 8px; }
+    .step-name { flex: 1; text-align: center; font-size: .7rem; color: rgba(255,255,255,.5); font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+    .step-name.active { color: var(--gold-light); }
+    .reg-body { padding: 44px; }
+    .reg-step { display: none; animation: fadeUp .35s ease; }
+    .reg-step.active { display: block; }
+    .step-h { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; color: var(--navy); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 12px; }
+    .step-h i { color: var(--gold); font-size: 1.4rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+    @media(max-width:600px) { .form-row { grid-template-columns: 1fr; } .reg-body { padding: 24px; } }
+    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .form-group label { font-weight: 700; font-size: .85rem; color: var(--text); letter-spacing: .2px; }
+    .form-group input, .form-group select, .form-group textarea { border: 1.5px solid var(--gray-200); border-radius: var(--r-sm); padding: 12px 16px; font-size: .95rem; font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color var(--t), box-shadow var(--t), background var(--t); background: var(--cream); color: var(--text); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 4px rgba(10,22,40,.08); background: #fff; }
+    .form-group input.error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+    .error-msg { color: var(--red); font-size: .78rem; display: none; font-weight: 600; }
+    .form-group input.error ~ .error-msg { display: block; }
+    .reg-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; gap: 12px; }
+    .btn-step-back { background: none; border: 2px solid var(--gray-200); color: var(--muted); padding: 12px 28px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: var(--t); font-size: .9rem; }
+    .btn-step-back:hover { border-color: var(--navy); color: var(--navy); }
+    .btn-step-next { background: var(--navy); color: #fff; border: none; padding: 13px 34px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: transform var(--t), box-shadow var(--t); font-size: .9rem; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-step-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(10,22,40,.3); }
+    .btn-submit-final { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border: none; padding: 14px 40px; border-radius: 50px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform var(--t), box-shadow var(--t); display: inline-flex; align-items: center; gap: 8px; }
+    .btn-submit-final:hover { transform: translateY(-2px); box-shadow: var(--sh-gold); }
+    .success-card { text-align: center; padding: 52px 20px; animation: fadeUp .5s ease; }
+    .success-icon { font-size: 4.5rem; margin-bottom: 1.2rem; animation: pop .6s cubic-bezier(.18,.89,.32,1.28); display: inline-block; }
+    @keyframes pop { 0%{transform:scale(0)} 70%{transform:scale(1.2)} 100%{transform:scale(1)} }
+    .success-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--navy); }
+    .success-card p { color: var(--muted); margin-top: .5rem; }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--cream); }
+    .gallery-filter { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 2.5rem; }
+    .filter-btn { padding: 8px 22px; border-radius: 50px; border: 2px solid var(--gray-200); background: #fff; font-weight: 700; font-size: .83rem; cursor: pointer; transition: var(--t); color: var(--muted); letter-spacing: .3px; }
+    .filter-btn.active, .filter-btn:hover { border-color: var(--navy); background: var(--navy); color: #fff; }
+    .gallery-masonry { columns: 3; gap: 16px; }
+    @media(max-width:700px) { .gallery-masonry { columns: 2; } }
+    @media(max-width:480px) { .gallery-masonry { columns: 1; } }
+    .g-item { break-inside: avoid; margin-bottom: 16px; border-radius: var(--r-md); overflow: hidden; position: relative; cursor: pointer; box-shadow: var(--sh-sm); transition: transform var(--t), box-shadow var(--t); }
+    .g-item:hover { transform: translateY(-4px); box-shadow: var(--sh-md); }
+    .g-item img { width: 100%; height: auto; display: block; transition: transform .5s ease; }
+    .g-item:hover img { transform: scale(1.05); }
+    .g-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,22,40,.9) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; opacity: 0; transition: opacity var(--t); }
+    .g-item:hover .g-overlay { opacity: 1; }
+    .g-overlay span { color: #fff; font-weight: 700; font-size: .9rem; }
+    .g-overlay small { color: var(--gold-light); font-size: .75rem; }
+    .g-zoom { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,.92); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1rem; opacity: 0; transition: opacity var(--t); box-shadow: var(--sh-sm); color: var(--navy); }
+    .g-item:hover .g-zoom { opacity: 1; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 9999; align-items: center; justify-content: center; }
+    .lightbox.show { display: flex; animation: fadeUp .3s ease; }
+    .lightbox img { max-width: 86vw; max-height: 78vh; border-radius: var(--r-md); box-shadow: var(--sh-lg); }
+    .lb-close { position: absolute; top: 20px; right: 28px; font-size: 2.5rem; color: rgba(255,255,255,.7); cursor: pointer; line-height: 1; transition: color var(--t); }
+    .lb-close:hover { color: var(--gold); }
+    .lb-caption { position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%); color: #fff; font-weight: 700; font-size: .95rem; background: rgba(0,0,0,.5); padding: 8px 20px; border-radius: 50px; white-space: nowrap; }
+
+    /* ── NEWS ── */
+    #news { background: var(--white); }
+    .news-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .ntab { padding: 9px 24px; border: 2px solid var(--gray-200); background: var(--white); border-radius: 50px; font-weight: 700; color: var(--muted); cursor: pointer; transition: var(--t); font-size: .85rem; }
+    .ntab.active, .ntab:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .news-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    @media(max-width:800px) { .news-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:500px) { .news-grid { grid-template-columns: 1fr; } }
+    .nc { background: var(--white); border-radius: var(--r-md); overflow: hidden; box-shadow: var(--sh-sm); transition: transform var(--t), box-shadow var(--t); display: none; border: 1px solid var(--gray-200); }
+    .nc.show { display: flex; flex-direction: column; animation: fadeUp .4s ease; }
+    .nc:hover { transform: translateY(-5px); box-shadow: var(--sh-md); }
+    .nc-image { height: 190px; overflow: hidden; }
+    .nc-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .nc:hover .nc-image img { transform: scale(1.07); }
+    .nc-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .nc-tag { display: inline-block; padding: 3px 12px; border-radius: 50px; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    .tag-event { background: rgba(212,160,23,.12); color: #8a6500; }
+    .tag-news { background: rgba(10,22,40,.08); color: var(--navy); }
+    .tag-achievement { background: rgba(34,197,94,.1); color: #15803d; }
+    .nc-body h5 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; line-height: 1.3; }
+    .nc-body p { color: var(--muted); font-size: .87rem; line-height: 1.65; flex: 1; }
+    .nc-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray-200); }
+    .nc-date { color: var(--muted); font-size: .77rem; display: flex; align-items: center; gap: 5px; }
+    .nc-read { color: var(--navy); font-weight: 700; font-size: .82rem; text-decoration: none; display: flex; align-items: center; gap: 4px; transition: color var(--t); }
+    .nc-read:hover { color: var(--gold); }
+
+    /* ── DONATE ── */
+    #donate { background: var(--gray-100); }
+    .donate-layout { display: grid; grid-template-columns: 1fr 1.15fr; gap: 44px; max-width: 1100px; margin: 0 auto; align-items: start; }
+    @media(max-width:800px) { .donate-layout { grid-template-columns: 1fr; } }
+    .donate-info-img { width: 100%; height: 220px; object-fit: cover; border-radius: var(--r-lg); margin-bottom: 1.8rem; box-shadow: var(--sh-md); }
+    .donate-info h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--navy); margin-bottom: 1rem; }
+    .donate-info p { color: var(--muted); line-height: 1.8; margin-bottom: 1.6rem; font-size: .95rem; }
+    .impact-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .impact-list li { display: flex; align-items: flex-start; gap: 14px; padding: 14px; background: #fff; border-radius: var(--r-sm); border: 1px solid var(--gray-200); transition: box-shadow var(--t); }
+    .impact-list li:hover { box-shadow: var(--sh-sm); }
+    .impact-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--gold-pale); color: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+    .impact-text strong { display: block; font-weight: 800; color: var(--text); font-size: .92rem; }
+    .impact-text span { color: var(--muted); font-size: .83rem; }
+    .donate-card { background: var(--white); border-radius: var(--r-xl); padding: 36px; box-shadow: var(--sh-md); border: 1px solid var(--gray-200); }
+    .donate-card h4 { font-weight: 800; color: var(--navy); margin-bottom: 1.3rem; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .amount-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 22px; }
+    .amt-btn { border: 2px solid var(--gray-200); background: var(--cream); border-radius: var(--r-sm); padding: 13px 6px; text-align: center; cursor: pointer; transition: var(--t); font-weight: 800; color: var(--navy); }
+    .amt-btn span { display: block; font-size: 1rem; }
+    .amt-btn small { font-size: .68rem; color: var(--muted); font-weight: 600; }
+    .amt-btn:hover, .amt-btn.active { border-color: var(--gold); background: var(--gold-pale); box-shadow: 0 0 0 3px rgba(212,160,23,.2); }
+    .progress-bar-wrap { margin: 22px 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: .8rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+    .progress-track { background: var(--gray-200); border-radius: 10px; height: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width 1.2s cubic-bezier(.4,0,.2,1); width: 0; }
+    /* Payment tabs */
+    .payment-tabs { display: flex; gap: 8px; margin: 18px 0 16px; flex-wrap: wrap; }
+    .ptab { flex: 1; min-width: 72px; padding: 10px 8px; border: 2px solid var(--gray-200); border-radius: var(--r-sm); background: var(--cream); cursor: pointer; text-align: center; transition: var(--t); font-weight: 700; font-size: .78rem; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .ptab i { font-size: 1.25rem; }
+    .ptab.active { border-color: var(--navy); background: var(--navy); color: #fff; }
+    .ptab:hover:not(.active) { border-color: var(--navy-mid); color: var(--navy); }
+    .payment-panel { display: none; animation: fadeUp .3s ease; }
+    .payment-panel.active { display: block; }
+    .card-number-wrap { position: relative; }
+    .card-number-wrap input { padding-right: 52px; letter-spacing: 2px; font-family: 'Courier New', monospace; font-size: .95rem; }
+    .card-brand-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 1.3rem; color: var(--muted); }
+    .cvv-wrap { position: relative; }
+    .cvv-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0; }
+    .upi-logo-row { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .upi-logo { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 10px; padding: 8px 14px; font-size: .78rem; font-weight: 800; color: var(--navy); cursor: pointer; transition: var(--t); box-shadow: var(--sh-sm); letter-spacing:.2px; }
+    .upi-logo:hover { border-color: var(--gold); background: var(--gold-pale); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(212,160,23,.25); }
+    /* UPI QR inside payment panel - Premium redesign */
+    .upi-qr-box { margin-top: 20px; background: linear-gradient(135deg, #0a1628 0%, #1e3a5f 100%); border-radius: var(--r-lg); padding: 28px 20px 22px; text-align: center; position: relative; overflow: hidden; box-shadow: 0 12px 40px rgba(10,22,40,.22); }
+    .upi-qr-box::before { content:''; position:absolute; width:220px; height:220px; background: radial-gradient(circle, rgba(212,160,23,.14) 0%, transparent 70%); top:-80px; right:-60px; border-radius:50%; pointer-events:none; }
+    .upi-qr-box::after { content:''; position:absolute; inset:0; background: repeating-linear-gradient(45deg, transparent, transparent 24px, rgba(255,255,255,.018) 24px, rgba(255,255,255,.018) 25px); pointer-events:none; }
+    .upi-qr-header { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:18px; position:relative; z-index:1; }
+    .upi-qr-header i { color:var(--gold-light); font-size:1.1rem; }
+    .upi-qr-header span { color:#fff; font-size:.82rem; font-weight:700; letter-spacing:.4px; }
+    .upi-qr-frame { position:relative; display:inline-block; z-index:1; }
+    .upi-qr-frame::before { content:''; position:absolute; inset:-3px; border-radius:14px; background: linear-gradient(135deg, var(--gold), var(--gold-light), rgba(212,160,23,.3), var(--gold)); z-index:-1; animation: qrGlow 3s ease-in-out infinite; }
+    @keyframes qrGlow { 0%,100%{ opacity:.8; } 50%{ opacity:1; box-shadow: 0 0 24px rgba(212,160,23,.5); } }
+    .upi-qr-inner { background: #fff; padding: 14px; border-radius: 11px; display:inline-block; }
+    .upi-qr-box canvas { margin: 0 auto; border-radius: 4px; display:block; }
+    .upi-qr-amount-badge { margin-top: 16px; position:relative; z-index:1; }
+    .upi-qr-amount-label { display:inline-flex; align-items:center; gap:6px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); font-size: .88rem; font-weight: 900; padding: 7px 20px; border-radius: 50px; letter-spacing:.3px; box-shadow: 0 4px 16px rgba(212,160,23,.4); }
+    .upi-qr-hint { color:rgba(255,255,255,.55); font-size:.72rem; margin-top:10px; position:relative; z-index:1; letter-spacing:.3px; }
+    .upi-apps-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; position:relative; z-index:1; flex-wrap:wrap; }
+    .upi-app-chip { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:6px; padding:4px 10px; font-size:.7rem; font-weight:700; color:rgba(255,255,255,.7); letter-spacing:.3px; }
+    .upi-qr-amount-label-old { display:none; }
+    .netbanking-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
+    .bank-btn { border: 1.5px solid var(--gray-200); background: var(--cream); border-radius: 8px; padding: 11px 6px; text-align: center; cursor: pointer; transition: var(--t); font-size: .82rem; font-weight: 700; color: var(--navy); }
+    .bank-btn:hover, .bank-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
+    .donate-btn-wrap { margin-top: 22px; }
+    .btn-donate { width: 100%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border: none; padding: 16px; border-radius: 50px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform var(--t), box-shadow var(--t); display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: var(--sh-gold); }
+    .btn-donate:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(212,160,23,.5); }
+    .secure-note { display: flex; align-items: center; gap: 7px; justify-content: center; margin-top: 14px; color: var(--muted); font-size: .76rem; font-weight: 600; }
+    .secure-note i { color: var(--green); font-size: .9rem; }
+    /* PAYMENT SUCCESS MODAL */
+    .pay-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(6px); }
+    .pay-modal-overlay.show { display: flex; }
+    .pay-modal { background: var(--white); border-radius: var(--r-xl); padding: 50px 44px; text-align: center; max-width: 440px; width: 90%; box-shadow: var(--sh-lg); animation: fadeUp .4s ease; }
+    .pay-modal .check-anim { font-size: 4.5rem; margin-bottom: 1.2rem; display: block; animation: pop .6s ease; }
+    .pay-modal h3 { font-family: 'Cormorant Garamond', serif; color: var(--navy); margin-bottom: .5rem; font-size: 2.2rem; }
+    .pay-modal p { color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; }
+    .pay-modal .tx-id { background: var(--gray-100); border-radius: 8px; padding: 12px 18px; font-family: monospace; font-size: .85rem; color: var(--navy); margin-bottom: 1.8rem; border: 1px solid var(--gray-200); }
+    .btn-modal-close { background: var(--navy); color: #fff; border: none; padding: 13px 36px; border-radius: 50px; font-weight: 800; cursor: pointer; transition: var(--t); }
+    .btn-modal-close:hover { background: var(--navy-light); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--navy); color: rgba(255,255,255,.65); padding: 60px 5% 30px; }
+    .footer-grid { max-width: 1200px; margin: 0 auto 44px; display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 44px; }
+    @media(max-width:800px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:500px) { .footer-grid { grid-template-columns: 1fr; } }
+    .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: .8rem; }
+    .footer-brand em { color: var(--gold); font-style: normal; }
+    footer p { font-size: .87rem; line-height: 1.75; max-width: 280px; }
+    footer h6 { color: var(--gold-light); font-weight: 800; font-size: .82rem; margin-bottom: 1.1rem; letter-spacing: .8px; text-transform: uppercase; }
+    footer ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    footer ul a { color: rgba(255,255,255,.6); text-decoration: none; font-size: .87rem; transition: color var(--t); display: flex; align-items: center; gap: 7px; }
+    footer ul a:hover { color: var(--gold); }
+    footer ul a i { font-size: .75rem; opacity: .6; }
+    .social-links { display: flex; gap: 12px; margin-top: 1.4rem; }
+    .social-links a { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,.08); color: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: background var(--t), color var(--t), transform var(--t); text-decoration: none; }
+    .social-links a:hover { background: var(--gold); color: var(--navy); transform: translateY(-3px); }
+    .footer-bottom { max-width: 1200px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,.08); padding-top: 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-size: .8rem; }
+    .footer-bottom a { color: rgba(255,255,255,.5); text-decoration: none; transition: color var(--t); }
+    .footer-bottom a:hover { color: var(--gold); }
+
+    /* ── BACK TO TOP ── */
+    #backToTop { position: fixed; bottom: 28px; right: 28px; width: 44px; height: 44px; border-radius: 50%; background: var(--gold); color: var(--navy); border: none; cursor: pointer; font-size: 1.1rem; box-shadow: var(--sh-gold); transition: var(--t); opacity: 0; transform: translateY(20px); pointer-events: none; z-index: 800; display: flex; align-items: center; justify-content: center; }
+    #backToTop.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    #backToTop:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(212,160,23,.5); }
+
+    /* ── TOAST ── */
+    .toast { position: fixed; bottom: 80px; right: 28px; background: var(--navy); color: #fff; padding: 12px 20px; border-radius: var(--r-sm); font-size: .85rem; font-weight: 600; z-index: 9999; box-shadow: var(--sh-md); transform: translateY(20px); opacity: 0; transition: var(--t); pointer-events: none; display: flex; align-items: center; gap: 10px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast i { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader"><div class="loader-ring"></div></div>
+
+<!-- BACK TO TOP -->
+<button id="backToTop" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="bi bi-arrow-up"></i></button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="bi bi-check-circle-fill"></i><span id="toastMsg">Copied!</span></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="mainNav">
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <div class="brand-logo">A</div>
+      <span class="brand-text"><em>Alumni</em>Connect</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#qr-portal">QR Portal</a></li>
+      <li><a href="#register">Register</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#news">News</a></li>
+      <li><a href="#donate" class="nav-cta">Donate Now</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="hero-inner">
+    <span class="hero-badge"><i class="bi bi-mortarboard-fill"></i> Class of 2025 Reunion</span>
+    <h1>Welcome Back to<br><em>Our Alma Mater</em></h1>
+    <p>Reconnect with classmates, celebrate achievements, and give back to the community that shaped who you are today.</p>
+    <div class="hero-btns">
+      <a href="#register" class="btn-hero-primary"><i class="bi bi-person-plus-fill"></i> Join the Network</a>
+      <a href="#donate" class="btn-hero-outline"><i class="bi bi-heart-fill"></i> Make a Donation</a>
+    </div>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-dot"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item"><span class="stat-num" data-target="12400">0</span><span class="stat-label">Alumni</span></div>
+    <div class="stat-item"><span class="stat-num" data-target="48">0</span><span class="stat-label">Countries</span></div>
+    <div class="stat-item"><span class="stat-num">₹2.4 Cr</span><span class="stat-label">Funds Raised</span></div>
+    <div class="stat-item"><span class="stat-num" data-target="320">0</span><span class="stat-label">Events Hosted</span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner about-grid">
+    <div class="about-img-wrap">
+      <img class="about-img-main" src="https://images.unsplash.com/photo-1562774053-701939374585?w=900&auto=format&fit=crop&q=85" alt="University campus"/>
+      <div class="about-img-badge"><span>40+</span> Years of<br>Excellence</div>
+    </div>
+    <div class="about-text">
+      <span class="label-chip"><i class="bi bi-info-circle-fill"></i> Who We Are</span>
+      <h2 class="about-title">Building Bridges Between Generations</h2>
+      <div class="about-bar"></div>
+      <p>The Alumni Portal is your gateway to a vibrant global community of graduates. Stay connected, grow professionally, and help shape the next generation of students.</p>
+      <p>From mentorship programmes to annual reunions, we offer countless ways to give back and stay involved with the institution that started it all.</p>
+      <div class="about-features">
+        <div class="af-item"><i class="bi bi-patch-check-fill"></i> Mentorship Programs</div>
+        <div class="af-item"><i class="bi bi-calendar-event-fill"></i> Annual Reunions</div>
+        <div class="af-item"><i class="bi bi-briefcase-fill"></i> Career Network</div>
+        <div class="af-item"><i class="bi bi-heart-fill"></i> Scholarship Funds</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="label-chip"><i class="bi bi-person-plus-fill"></i> Join Us</span>
+      <h2 class="section-title">Alumni Registration</h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="reg-wrapper">
+      <div class="reg-header">
+        <div class="step-track">
+          <div class="step-dot active" id="dot1">1</div>
+          <div class="step-line"></div>
+          <div class="step-dot" id="dot2">2</div>
+          <div class="step-line"></div>
+          <div class="step-dot" id="dot3">3</div>
+        </div>
+      </div>
+      <div class="reg-body">
+        <!-- Step 1 -->
+        <div class="reg-step active" id="step1">
+          <div class="step-h"><i class="bi bi-person-fill"></i> Personal Details</div>
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" id="fname" placeholder="Aarav"/><span class="error-msg">Please enter your first name</span></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="lname" placeholder="Shah"/><span class="error-msg">Please enter your last name</span></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" id="email" placeholder="aarav@email.com"/><span class="error-msg">Please enter a valid email</span></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+91 98765 43210"/></div>
+          <div class="reg-actions"><span></span><button class="btn-step-next" onclick="goStep(2)">Next Step <i class="bi bi-arrow-right"></i></button></div>
+        </div>
+        <!-- Step 2 -->
+        <div class="reg-step" id="step2">
+          <div class="step-h"><i class="bi bi-mortarboard-fill"></i> Academic Info</div>
+          <div class="form-row">
+            <div class="form-group"><label>Graduation Year</label><select><option value="">Select year</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option></select></div>
+            <div class="form-group"><label>Department</label><select><option value="">Select dept.</option><option>Computer Science</option><option>Electronics</option><option>Mechanical</option><option>Civil</option><option>MBA</option></select></div>
+          </div>
+          <div class="form-group"><label>Current Employer / Organisation</label><input type="text" placeholder="Google, Infosys, Self-employed..."/></div>
+          <div class="form-group"><label>LinkedIn Profile URL</label><input type="url" placeholder="https://linkedin.com/in/yourprofile"/></div>
+          <div class="reg-actions"><button class="btn-step-back" onclick="goStep(1)"><i class="bi bi-arrow-left"></i> Back</button><button class="btn-step-next" onclick="goStep(3)">Next Step <i class="bi bi-arrow-right"></i></button></div>
+        </div>
+        <!-- Step 3 -->
+        <div class="reg-step" id="step3">
+          <div class="step-h"><i class="bi bi-sliders"></i> Preferences</div>
+          <div class="form-group"><label>How did you hear about us?</label><select><option>Social Media</option><option>Email</option><option>Friend / Colleague</option><option>University Notice</option></select></div>
+          <div class="form-group"><label>Brief Message (Optional)</label><textarea rows="4" placeholder="Share a memory or a note for your batchmates..."></textarea></div>
+          <div class="reg-actions"><button class="btn-step-back" onclick="goStep(2)"><i class="bi bi-arrow-left"></i> Back</button><button class="btn-submit-final" onclick="submitForm()">Submit Registration 🎓</button></div>
+        </div>
+        <!-- Success -->
+        <div class="reg-step" id="stepSuccess">
+          <div class="success-card">
+            <span class="success-icon">🎓</span>
+            <h3>You're In!</h3>
+            <p style="color:var(--muted);margin-top:.6rem;">Welcome to the Alumni Network. Check your email for confirmation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="label-chip"><i class="bi bi-images"></i> Memories</span>
+      <h2 class="section-title">Campus Gallery</h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="gallery-filter">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="events">Events</button>
+      <button class="filter-btn" data-filter="campus">Campus</button>
+      <button class="filter-btn" data-filter="sports">Sports</button>
+    </div>
+    <div class="gallery-masonry" id="galleryGrid">
+      <div class="g-item" data-cat="events" onclick="openLightbox('https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&auto=format&fit=crop','Convocation 2024')">
+        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop" alt="Convocation"/>
+        <div class="g-overlay"><span>Convocation 2024</span><small>Events</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="g-item" data-cat="campus" onclick="openLightbox('https://images.unsplash.com/photo-1562774053-701939374585?w=1400&auto=format&fit=crop','Main Building')">
+        <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&auto=format&fit=crop" alt="Campus"/>
+        <div class="g-overlay"><span>Main Building</span><small>Campus</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="g-item" data-cat="sports" onclick="openLightbox('https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1400&auto=format&fit=crop','Sports Day 2023')">
+        <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&auto=format&fit=crop" alt="Sports"/>
+        <div class="g-overlay"><span>Sports Day 2023</span><small>Sports</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="g-item" data-cat="events" onclick="openLightbox('https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=1400&auto=format&fit=crop','Alumni Meet 2024')">
+        <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=600&auto=format&fit=crop" alt="Alumni Meet"/>
+        <div class="g-overlay"><span>Alumni Meet 2024</span><small>Events</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="g-item" data-cat="campus" onclick="openLightbox('https://images.unsplash.com/photo-1497366216548-37526070297c?w=1400&auto=format&fit=crop','Library & Labs')">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&auto=format&fit=crop" alt="Library"/>
+        <div class="g-overlay"><span>Library & Labs</span><small>Campus</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+      <div class="g-item" data-cat="events" onclick="openLightbox('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=1400&auto=format&fit=crop','Tech Fest 2024')">
+        <img src="https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=600&auto=format&fit=crop" alt="Tech Fest"/>
+        <div class="g-overlay"><span>Tech Fest 2024</span><small>Events</small></div>
+        <div class="g-zoom"><i class="bi bi-zoom-in"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <span class="lb-close" onclick="closeLightbox()">&times;</span>
+  <img id="lb-img" src="" alt=""/>
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="label-chip"><i class="bi bi-newspaper"></i> Stay Informed</span>
+      <h2 class="section-title">Latest News & Events</h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="news-tabs">
+      <button class="ntab active" onclick="filterNews('all',this)">All</button>
+      <button class="ntab" onclick="filterNews('event',this)">Events</button>
+      <button class="ntab" onclick="filterNews('news',this)">News</button>
+      <button class="ntab" onclick="filterNews('achievement',this)">Achievements</button>
+    </div>
+    <div class="news-grid">
+      <div class="nc show" data-type="event"><div class="nc-image"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?w=600&auto=format&fit=crop" alt="Annual Reunion"/></div><div class="nc-body"><span class="nc-tag tag-event">Event</span><h5>Annual Alumni Reunion 2025</h5><p>Join us for a grand gathering of all batches. Network, celebrate, and relive your best campus memories with friends old and new.</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Jan 18, 2025</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+      <div class="nc show" data-type="achievement"><div class="nc-image"><img src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&auto=format&fit=crop" alt="Forbes 30 under 30"/></div><div class="nc-body"><span class="nc-tag tag-achievement">Achievement</span><h5>Three Alumni Named Forbes 30 Under 30</h5><p>We're proud to announce that three of our distinguished graduates have been recognised in Forbes' prestigious 30 Under 30 Asia list.</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Dec 10, 2024</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+      <div class="nc show" data-type="news"><div class="nc-image"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&auto=format&fit=crop" alt="Scholarship"/></div><div class="nc-body"><span class="nc-tag tag-news">News</span><h5>New ₹50 Lakh Scholarship Fund Launched</h5><p>Alumni contributions have made it possible to launch a new scholarship fund supporting 50 deserving students each academic year.</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Nov 28, 2024</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+      <div class="nc show" data-type="event"><div class="nc-image"><img src="https://images.unsplash.com/photo-1591115765373-5207764f72e7?w=600&auto=format&fit=crop" alt="Webinar"/></div><div class="nc-body"><span class="nc-tag tag-event">Event</span><h5>Leadership Webinar Series — Spring 2025</h5><p>Eminent alumni leaders will share insights on building careers in tech, finance, and entrepreneurship. Register early — seats limited!</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Feb 5, 2025</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+      <div class="nc show" data-type="achievement"><div class="nc-image"><img src="https://images.unsplash.com/photo-1532619187608-e5375cab36aa?w=600&auto=format&fit=crop" alt="Research Award"/></div><div class="nc-body"><span class="nc-tag tag-achievement">Achievement</span><h5>Alumni-Led Research Wins National Award</h5><p>Dr. Priya Menon's team received the DST Award for Innovation in Sustainable Engineering — a proud moment for our community.</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Oct 15, 2024</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+      <div class="nc show" data-type="news"><div class="nc-image"><img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=600&auto=format&fit=crop" alt="Campus Expansion"/></div><div class="nc-body"><span class="nc-tag tag-news">News</span><h5>Campus Expansion: New Innovation Hub</h5><p>The university breaks ground on a state-of-the-art 10,000 sq. ft. Innovation Hub, partly funded by alumni donations.</p><div class="nc-footer"><span class="nc-date"><i class="bi bi-calendar3"></i> Sep 30, 2024</span><a href="#" class="nc-read">Read more <i class="bi bi-arrow-right"></i></a></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DONATION -->
+<section id="donate">
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="label-chip"><i class="bi bi-heart-fill"></i> Give Back</span>
+      <h2 class="section-title">Make a Donation</h2>
+      <div class="title-line"></div>
+    </div>
+    <div class="donate-layout">
+      <div class="donate-info">
+        <img class="donate-info-img" src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=900&auto=format&fit=crop&q=85" alt="Students studying"/>
+        <h3>Your Gift Changes Lives</h3>
+        <p>Every rupee donated directly supports our students, faculty research, and campus infrastructure. Be the reason someone's dream becomes reality.</p>
+        <ul class="impact-list">
+          <li><div class="impact-icon"><i class="bi bi-mortarboard-fill"></i></div><div class="impact-text"><strong>₹500 — Student Study Kit</strong><span>Covers books, stationery & lab supplies for one semester</span></div></li>
+          <li><div class="impact-icon"><i class="bi bi-laptop-fill"></i></div><div class="impact-text"><strong>₹2,000 — Digital Access</strong><span>Funds one month of internet & software licenses</span></div></li>
+          <li><div class="impact-icon"><i class="bi bi-trophy-fill"></i></div><div class="impact-text"><strong>₹5,000 — Merit Scholarship</strong><span>Supports a top-performing student for one month</span></div></li>
+          <li><div class="impact-icon"><i class="bi bi-building-fill"></i></div><div class="impact-text"><strong>₹10,000 — Infrastructure Fund</strong><span>Contributes to labs, classrooms & facilities</span></div></li>
+        </ul>
+      </div>
+      <div class="donate-card">
+        <h4><i class="bi bi-heart-fill" style="color:var(--red)"></i> Select Donation Amount</h4>
+        <div class="amount-grid">
+          <div class="amt-btn active" onclick="selectAmount(this,'500')"><span>₹500</span><small>Study Kit</small></div>
+          <div class="amt-btn" onclick="selectAmount(this,'2000')"><span>₹2,000</span><small>Digital</small></div>
+          <div class="amt-btn" onclick="selectAmount(this,'5000')"><span>₹5,000</span><small>Scholarship</small></div>
+          <div class="amt-btn" onclick="selectAmount(this,'custom')"><span>Custom</span><small>Any amount</small></div>
+        </div>
+        <div class="form-group" id="customAmountWrap" style="display:none;">
+          <label>Enter Amount (₹)</label>
+          <input type="number" id="customAmount" placeholder="e.g. 1500" min="10"/>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-label"><span>₹1,63,500 raised</span><span>Goal: ₹2,40,000</span></div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <h4><i class="bi bi-shield-lock-fill" style="color:var(--navy)"></i> Choose Payment Method</h4>
+        <div class="payment-tabs">
+          <button class="ptab active" onclick="switchPayTab('card',this)"><i class="bi bi-credit-card-2-front-fill"></i>Card</button>
+          <button class="ptab" onclick="switchPayTab('upi',this)"><i class="bi bi-phone-fill"></i>UPI</button>
+          <button class="ptab" onclick="switchPayTab('netbanking',this)"><i class="bi bi-bank2"></i>Net Banking</button>
+          <button class="ptab" onclick="switchPayTab('wallet',this)"><i class="bi bi-wallet2"></i>Wallet</button>
+        </div>
+        <!-- CARD PANEL -->
+        <div class="payment-panel active" id="panel-card">
+          <div class="form-group"><label>Cardholder Name</label><input type="text" id="cardName" placeholder="Aarav Shah"/></div>
+          <div class="form-group card-number-wrap"><label>Card Number</label><input type="text" id="cardNum" placeholder="0000  0000  0000  0000" maxlength="19" oninput="formatCardNum(this)"/><span class="card-brand-icon" id="cardBrandIcon"><i class="bi bi-credit-card"></i></span></div>
+          <div class="form-row">
+            <div class="form-group"><label>Expiry Date</label><input type="text" id="cardExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"/></div>
+            <div class="form-group cvv-wrap"><label>CVV</label><input type="password" id="cardCvv" placeholder="•••" maxlength="3"/><button type="button" class="cvv-toggle" onclick="toggleCvv(this)"><i class="bi bi-eye"></i></button></div>
+          </div>
+        </div>
+        <!-- UPI PANEL with Premium QR -->
+        <div class="payment-panel" id="panel-upi">
+          <div class="form-group"><label>UPI ID</label><input type="text" id="upiId" placeholder="yourname@upi" oninput="updateUpiQR()"/></div>
+          <p style="font-size:.82rem;color:var(--muted);margin-top:-10px;margin-bottom:12px;">Enter your UPI ID or tap an app below to auto-fill</p>
+          <div class="upi-logo-row">
+            <div class="upi-logo" onclick="fillUpiHint('@okaxis')">🎯 GPay</div>
+            <div class="upi-logo" onclick="fillUpiHint('@ybl')">📱 PhonePe</div>
+            <div class="upi-logo" onclick="fillUpiHint('@paytm')">💙 Paytm</div>
+            <div class="upi-logo" onclick="fillUpiHint('@upi')">🇮🇳 BHIM</div>
+            <div class="upi-logo" onclick="fillUpiHint('@oksbi')">🛒 Amazon</div>
+          </div>
+
+          <!-- Premium QR Box -->
+          <div class="upi-qr-box">
+            <div class="upi-qr-header">
+              <i class="bi bi-qr-code-scan"></i>
+              <span>SCAN &amp; PAY · SECURE UPI PAYMENT</span>
+            </div>
+            <div class="upi-qr-frame">
+              <div class="upi-qr-inner">
+                <img id="upiQrImg" src="data:image/png;base64,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" alt="UPI Payment QR Code" style="width:200px;height:200px;display:block;border-radius:4px;"/>
+              </div>
+            </div>
+            <div class="upi-qr-amount-badge">
+              <div class="upi-qr-amount-label" id="upiAmountLabel">
+                <i class="bi bi-currency-rupee"></i> <span id="upiAmountText">500</span>
+              </div>
+            </div>
+            <p class="upi-qr-hint">Open any UPI app → Scan QR → Confirm payment</p>
+            <div class="upi-apps-row">
+              <span class="upi-app-chip">GPay</span>
+              <span class="upi-app-chip">PhonePe</span>
+              <span class="upi-app-chip">Paytm</span>
+              <span class="upi-app-chip">BHIM</span>
+              <span class="upi-app-chip">Amazon Pay</span>
+            </div>
+          </div>
+        </div>
+        <!-- NET BANKING PANEL -->
+        <div class="payment-panel" id="panel-netbanking">
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:10px;">Select your bank</p>
+          <div class="netbanking-grid">
+            <div class="bank-btn" onclick="selectBank(this)">SBI</div><div class="bank-btn" onclick="selectBank(this)">HDFC</div><div class="bank-btn" onclick="selectBank(this)">ICICI</div>
+            <div class="bank-btn" onclick="selectBank(this)">Axis</div><div class="bank-btn" onclick="selectBank(this)">Kotak</div><div class="bank-btn" onclick="selectBank(this)">PNB</div>
+          </div>
+          <div class="form-group" style="margin-top:14px;"><label>Net Banking User ID</label><input type="text" id="nbUserId" placeholder="Enter your user ID"/></div>
+          <div class="form-group"><label>Password</label><input type="password" id="nbPass" placeholder="••••••••"/></div>
+        </div>
+        <!-- WALLET PANEL -->
+        <div class="payment-panel" id="panel-wallet">
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:10px;">Select your wallet</p>
+          <div class="netbanking-grid">
+            <div class="bank-btn" onclick="selectBank(this)">Paytm</div><div class="bank-btn" onclick="selectBank(this)">Mobikwik</div><div class="bank-btn" onclick="selectBank(this)">Freecharge</div>
+            <div class="bank-btn" onclick="selectBank(this)">Ola Money</div><div class="bank-btn" onclick="selectBank(this)">PhonePe</div><div class="bank-btn" onclick="selectBank(this)">Amazon Pay</div>
+          </div>
+          <div class="form-group" style="margin-top:14px;"><label>Registered Mobile Number</label><input type="tel" id="walletPhone" placeholder="+91 98765 43210"/></div>
+        </div>
+        <div class="donate-btn-wrap">
+          <button class="btn-donate" onclick="processDonation()"><i class="bi bi-heart-fill"></i><span id="donateBtnText">Donate ₹500 Now</span></button>
+        </div>
+        <div class="secure-note"><i class="bi bi-shield-check"></i> 256-bit SSL secured &nbsp;·&nbsp; All major cards & UPI accepted</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT SUCCESS MODAL -->
+<div class="pay-modal-overlay" id="payModal">
+  <div class="pay-modal">
+    <span class="check-anim">✅</span>
+    <h3>Thank You!</h3>
+    <p>Your generous donation has been received. You are making a real difference in students' lives.</p>
+    <div class="tx-id" id="txId">Transaction ID: ALM-XXXXXXXX</div>
+    <button class="btn-modal-close" onclick="closePayModal()">Done</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand"><em>Alumni</em>Connect</div>
+      <p>A vibrant community of graduates staying connected, giving back, and inspiring the next generation.</p>
+      <div class="social-links">
+        <a href="#" title="Instagram"><i class="bi bi-instagram"></i></a>
+        <a href="#" title="Twitter/X"><i class="bi bi-twitter-x"></i></a>
+        <a href="#" title="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        <a href="#" title="YouTube"><i class="bi bi-youtube"></i></a>
+      </div>
+    </div>
+    <div>
+      <h6>Quick Links</h6>
+      <ul>
+        <li><a href="#about"><i class="bi bi-chevron-right"></i> About</a></li>
+        <li><a href="#register"><i class="bi bi-chevron-right"></i> Register</a></li>
+        <li><a href="#gallery"><i class="bi bi-chevron-right"></i> Gallery</a></li>
+        <li><a href="#news"><i class="bi bi-chevron-right"></i> News</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Resources</h6>
+      <ul>
+        <li><a href="#"><i class="bi bi-chevron-right"></i> Career Portal</a></li>
+        <li><a href="#"><i class="bi bi-chevron-right"></i> Mentorship</a></li>
+        <li><a href="#"><i class="bi bi-chevron-right"></i> Scholarships</a></li>
+        <li><a href="#"><i class="bi bi-chevron-right"></i> Events Calendar</a></li>
+      </ul>
+    </div>
+    <div>
+      <h6>Contact</h6>
+      <ul>
+        <li><a href="mailto:alumni@university.edu"><i class="bi bi-envelope-fill"></i> alumni@university.edu</a></li>
+        <li><a href="tel:+912212345678"><i class="bi bi-telephone-fill"></i> +91 22 1234 5678</a></li>
+        <li><a href="#"><i class="bi bi-geo-alt-fill"></i> Mumbai, Maharashtra</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom" style="max-width:1200px;margin:0 auto;">
+    <span>© 2025 AlumniConnect. All rights reserved.</span>
+    <span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms of Use</a></span>
+  </div>
+</footer>
+
+<script>
+/* ══ PRELOADER ══ */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 400);
+});
+
+/* ══ NAVBAR SCROLL ══ */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+/* ══ HAMBURGER ══ */
+document.getElementById('hamburger').addEventListener('click', function() {
+  this.classList.toggle('open');
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => {
+  document.getElementById('navLinks').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}));
+
+/* ══ HERO PARTICLES ══ */
+const particleContainer = document.getElementById('heroParticles');
+for (let i = 0; i < 18; i++) {
+  const s = document.createElement('span');
+  const size = Math.random() * 6 + 2;
+  s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${6+Math.random()*8}s;--delay:${Math.random()*-10}s;--tx:${(Math.random()-0.5)*60}px;--ty:${(Math.random()-0.5)*60}px;--op:${Math.random()*.2+.05}`;
+  particleContainer.appendChild(s);
+}
+
+/* ══ COUNTER ANIMATION ══ */
+function animateCounter(el, target) {
+  let start = 0, duration = 2000, startTime = null;
+  const suffix = target > 100 ? '+' : '';
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(ease * target).toLocaleString('en-IN') + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.target.dataset.target) {
+      animateCounter(e.target, parseInt(e.target.dataset.target));
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-target]').forEach(el => counterObs.observe(el));
+
+/* ══ TOAST ══ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ══ QR CODE SYSTEM ══ */
+const QR_URLS = {
+  register: 'https://alumniconnect.edu/register',
+  donate:   'https://alumniconnect.edu/donate',
+  gallery:  'https://alumniconnect.edu/gallery',
+  news:     'https://alumniconnect.edu/news'
+};
+const QR_LABELS = {
+  register: 'Alumni Registration',
+  donate:   'Make a Donation',
+  gallery:  'Campus Gallery',
+  news:     'News & Events'
+};
+let currentQrKey = 'register';
+
+function generateQR(canvasId, url, size) {
+  QRCode.toCanvas(document.getElementById(canvasId), url, {
+    width: size, margin: 1,
+    color: { dark: '#0a1628', light: '#faf8f4' }
+  }, err => { if (err) console.error('QR Error:', err); });
+}
+
+function switchQR(key, btn) {
+  currentQrKey = key;
+  document.querySelectorAll('.qr-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('qrCardLabel').textContent = QR_LABELS[key];
+  document.getElementById('qrUrlDisplay').textContent = QR_URLS[key].replace('https://','');
+  generateQR('mainQrCanvas', QR_URLS[key], 200);
+}
+
+function downloadQR(e) {
+  e.preventDefault();
+  const canvas = document.getElementById('mainQrCanvas');
+  const link = document.createElement('a');
+  link.download = `alumni-${currentQrKey}-qr.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showToast('QR code downloaded!');
+}
+
+function copyQRUrl() {
+  navigator.clipboard.writeText(QR_URLS[currentQrKey])
+    .then(() => showToast('Link copied to clipboard!'))
+    .catch(() => showToast('Link: ' + QR_URLS[currentQrKey]));
+}
+
+/* ══ UPI QR (live, updates on amount/ID change) ══ */
+function buildUpiString() {
+  const amt = selectedAmount === 'custom' ? (document.getElementById('customAmount').value || '1') : selectedAmount;
+  const upiId = document.getElementById('upiId').value.trim() || 'alumniconnect@upi';
+  return `upi://pay?pa=${upiId}&pn=AlumniConnect&am=${amt}&cu=INR&tn=AlumniDonation`;
+}
+
+function updateUpiQR() {
+  const amt = selectedAmount === 'custom' ? (document.getElementById('customAmount').value || '?') : selectedAmount;
+  const formatted = isNaN(parseInt(amt)) ? amt : parseInt(amt).toLocaleString('en-IN');
+  const textEl = document.getElementById('upiAmountText');
+  if (textEl) textEl.textContent = formatted;
+}
+
+/* ══ INIT QR ON LOAD ══ */
+document.addEventListener('DOMContentLoaded', () => {
+  updateUpiQR();
+  const customInput = document.getElementById('customAmount');
+  if (customInput) customInput.addEventListener('input', () => { selectedAmount = customInput.value || '0'; updateDonateBtn(); updateUpiQR(); });
+});
+
+/* ══ REGISTRATION MULTI-STEP ══ */
+let currentStep = 1;
+function goStep(n) {
+  document.getElementById('step' + currentStep).classList.remove('active');
+  document.getElementById('dot' + currentStep).classList.remove('active');
+  document.getElementById('dot' + currentStep).classList.add('done');
+  document.getElementById('dot' + currentStep).innerHTML = '<i class="bi bi-check-lg"></i>';
+  currentStep = n;
+  const stepEl = document.getElementById('step' + n);
+  if (stepEl) {
+    stepEl.classList.add('active');
+    document.getElementById('dot' + n).classList.add('active');
+    document.getElementById('dot' + n).classList.remove('done');
+    document.getElementById('dot' + n).textContent = n;
+  }
+}
+function submitForm() {
+  document.getElementById('step3').classList.remove('active');
+  document.getElementById('dot3').classList.add('done');
+  document.getElementById('dot3').innerHTML = '<i class="bi bi-check-lg"></i>';
+  document.getElementById('stepSuccess').classList.add('active');
+  showToast('Registration successful! 🎓');
+}
+
+/* ══ GALLERY FILTER ══ */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    const f = this.dataset.filter;
+    document.querySelectorAll('.g-item').forEach(item => {
+      item.style.display = (f === 'all' || item.dataset.cat === f) ? 'block' : 'none';
+    });
+  });
+});
+function openLightbox(src, caption) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-caption').textContent = caption;
+  document.getElementById('lightbox').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+/* ══ NEWS FILTER ══ */
+function filterNews(type, el) {
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.nc').forEach(card => {
+    card.classList.toggle('show', type === 'all' || card.dataset.type === type);
+  });
+}
+
+/* ══ DONATION AMOUNT ══ */
+let selectedAmount = '500';
+function selectAmount(el, val) {
+  document.querySelectorAll('.amt-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedAmount = val;
+  const wrap = document.getElementById('customAmountWrap');
+  wrap.style.display = val === 'custom' ? 'flex' : 'none';
+  if (val === 'custom') selectedAmount = document.getElementById('customAmount').value || '0';
+  updateDonateBtn();
+  updateUpiQR();
+}
+function updateDonateBtn() {
+  const display = (selectedAmount === 'custom' || selectedAmount === '0') ? '?' : '₹' + parseInt(selectedAmount).toLocaleString('en-IN');
+  document.getElementById('donateBtnText').textContent = 'Donate ' + display + ' Now';
+}
+
+/* ══ PAYMENT TABS ══ */
+function switchPayTab(tab, el) {
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'upi') setTimeout(updateUpiQR, 50);
+}
+
+/* ══ CARD FORMATTING ══ */
+function formatCardNum(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1  ').trim();
+  const icon = document.getElementById('cardBrandIcon');
+  if (v.startsWith('4')) icon.innerHTML = '<i class="bi bi-credit-card-2-front-fill" style="color:#1a1f71;"></i>';
+  else if (v.startsWith('5')) icon.innerHTML = '<i class="bi bi-credit-card-2-front-fill" style="color:#eb001b;"></i>';
+  else if (v.startsWith('3')) icon.innerHTML = '<i class="bi bi-credit-card-fill" style="color:#007bc1;"></i>';
+  else icon.innerHTML = '<i class="bi bi-credit-card"></i>';
+}
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,4);
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2);
+  input.value = v;
+}
+function toggleCvv(btn) {
+  const input = btn.previousElementSibling;
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.innerHTML = input.type === 'password' ? '<i class="bi bi-eye"></i>' : '<i class="bi bi-eye-slash"></i>';
+}
+function fillUpiHint(suffix) {
+  const upiInput = document.getElementById('upiId');
+  const current = upiInput.value.split('@')[0] || 'yourname';
+  upiInput.value = current + suffix;
+  upiInput.focus();
+  updateUpiQR();
+}
+function selectBank(el) {
+  el.closest('.netbanking-grid').querySelectorAll('.bank-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ══ PROCESS DONATION ══ */
+function processDonation() {
+  const activeTab = document.querySelector('.ptab.active').textContent.trim().toLowerCase();
+  let valid = true, msg = '';
+  if (activeTab.includes('card')) {
+    const name = document.getElementById('cardName').value.trim();
+    const num = document.getElementById('cardNum').value.replace(/\s/g,'');
+    const exp = document.getElementById('cardExpiry').value.trim();
+    const cvv = document.getElementById('cardCvv').value.trim();
+    if (!name) { msg = 'Please enter cardholder name.'; valid = false; }
+    else if (num.length < 16) { msg = 'Please enter a valid 16-digit card number.'; valid = false; }
+    else if (exp.length < 7) { msg = 'Please enter a valid expiry date.'; valid = false; }
+    else if (cvv.length < 3) { msg = 'Please enter CVV.'; valid = false; }
+  } else if (activeTab.includes('upi')) {
+    const upi = document.getElementById('upiId').value.trim();
+    if (!upi.includes('@')) { msg = 'Please enter a valid UPI ID (e.g. name@upi).'; valid = false; }
+  } else if (activeTab.includes('net')) {
+    if (!document.getElementById('nbUserId').value.trim() || !document.getElementById('nbPass').value.trim()) { msg = 'Please enter net banking credentials.'; valid = false; }
+  } else if (activeTab.includes('wallet')) {
+    if (document.getElementById('walletPhone').value.trim().length < 10) { msg = 'Please enter a valid mobile number.'; valid = false; }
+  }
+  if (!valid) { showToast('⚠️ ' + msg); return; }
+  const txId = 'ALM-' + Math.random().toString(36).substring(2,10).toUpperCase();
+  document.getElementById('txId').textContent = 'Transaction ID: ' + txId;
+  document.getElementById('payModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closePayModal() {
+  document.getElementById('payModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+/* ══ PROGRESS BAR ANIMATION ══ */
+const progressObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { document.getElementById('progressFill').style.width = '68%'; progressObs.unobserve(e.target); } });
+}, { threshold: 0.3 });
+const donateSection = document.getElementById('donate');
+if (donateSection) progressObs.observe(donateSection);
+</script>
+</body>
+</html>
